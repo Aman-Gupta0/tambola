@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th{
+  font-family: Comic Sans, Comic Sans MS, cursive;
+  background-color:#c2c2d6;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+  
+}
+
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+
+.changeStyle{
+  opacity:0.7;
+  text-decoration:line-through;
+}
+</style>
+</head>
+<body>
+<div id="ticket"></div>
+<table id="tambola"></table>
+<button id="start"  style="display:block" onclick="start()">Auto Resume Game</button>
+<button id="stop" style="display:none" onclick="stop()">Stop</button><br>
+</body>
+
+<script>
+
+let players=prompt("no of players");
+let name=[];
+for(let i=0;i<players;i++){	
+	name[i]=prompt("Name of player "+(i+1)+ " ?");
+    let table=document.createElement("table");    
+    table.id="table"+i;
+	document.getElementById("ticket").append(table);    
+	generateTicket(i);
+    let br=document.createElement("br");
+    document.getElementById("ticket").append(br);    
+    document.getElementById("ticket").append(br);
+}
+ 
+
+
+function generateTicket(player){  
+  let th=document.createElement("th");
+  th.setAttribute('colspan', 9);
+  th.innerText=name[player];
+  document.getElementById("table"+player).append(th);
+  for(let i=0;i<3;i++){
+  	let tr=document.createElement("tr");    
+    document.getElementById("table"+player).append(tr);    
+  }
+  let count=0;
+  let row=0+(player*3);
+  let idcount=1;
+  for(let i=0;i<5;i++){
+  	let td=document.createElement("td");
+    td.innerText=randomNum (count+1, count+5);
+    td.id="ticket"+player+"-"+(idcount++);
+    document.getElementsByTagName("tr")[row].append(td); 
+    
+    let td1=document.createElement("td");
+  	document.getElementsByTagName("tr")[row+1].append(td1);
+    
+    let td2=document.createElement("td");
+    td2.innerText=randomNum (count+6, count+10);
+    td2.id="ticket"+player+"-"+(idcount++);
+    document.getElementsByTagName("tr")[row+2].append(td2);
+    
+    if(i<4){
+      let td3=document.createElement("td");
+      document.getElementsByTagName("tr")[row].append(td3);
+
+      let td4=document.createElement("td");
+      td4.innerText=randomNum (count+11, count+20);
+      td4.id="ticket"+player+"-"+(idcount++);
+      document.getElementsByTagName("tr")[row+1].append(td4);
+
+      let td5=document.createElement("td");
+      document.getElementsByTagName("tr")[row+2].append(td5);
+
+      count+=20;
+    }    
+  }
+ }
+
+
+
+
+createTambolaBoard();  
+ function createTambolaBoard(){
+ 	var count=0;
+	for(var i=0;i<9;i++){
+		var tr=document.createElement("tr");
+    	document.getElementById("tambola").append(tr);
+    	for(var j=0;j<10;j++){
+			count++;
+    		var td=document.createElement("td");
+    		td.setAttribute('id',"tambola"+count);
+            td.setAttribute('text-align','center');
+        	td.innerText=count;
+        	td.setAttribute('onclick','announce('+count+')');
+        	tr.append(td);
+    	}
+	}
+ }
+ 
+ 
+ 
+ function announce(num){
+ 	let x=document.getElementById("tambola"+num);
+    x.classList.add("changeStyle");
+    
+    for(let i=0;i<players;i++){
+    	for(let j=1;j<15;j++){
+        	let y=document.getElementById("ticket"+i+"-"+j);
+    		if(x.innerText==y.innerText)
+            	y.classList.add("changeStyle");            
+        }
+    }
+    
+    
+ }
+
+ function randomNum (min, max) {
+    	return Math.floor(Math.random() * (max - min + 1)) + min;
+ }
+ 
+ 
+ let timer, random=0;
+ function start(){
+    	timer=setInterval(autoAnnounce, 1000);        									document.getElementById("start").innerText="Resume";
+        document.getElementById("stop").style.display="block";
+        document.getElementById("start").style.display="none";
+    }
+    function stop(){
+    	clearInterval(timer);
+        document.getElementById("start").style.display="block";
+        document.getElementById("stop").style.display="none";
+    }   
+  
+    function autoAnnounce(){      
+        announce(Math.round(Math.random()*99 +1,2));    
+    }
+ 
+ 
+    
+</script>
+</html>
